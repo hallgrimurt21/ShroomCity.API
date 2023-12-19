@@ -1,6 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+using ShroomCity.Repositories.Implementations;
 var builder = WebApplication.CreateBuilder(args);
 
-// TODO: Register all services
+builder.Services.AddDbContext<ShroomCityDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
