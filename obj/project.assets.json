@@ -364,9 +364,9 @@
       "Npgsql.EntityFrameworkCore.PostgreSQL/7.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "[7.0.0, 8.0.0)",
-          "Microsoft.EntityFrameworkCore.Abstractions": "[7.0.0, 8.0.0)",
-          "Microsoft.EntityFrameworkCore.Relational": "[7.0.0, 8.0.0)",
+          "Microsoft.EntityFrameworkCore": "[7.0.0)",
+          "Microsoft.EntityFrameworkCore.Abstractions": "[7.0.0)",
+          "Microsoft.EntityFrameworkCore.Relational": "[7.0.0)",
           "Npgsql": "7.0.0"
         },
         "compile": {
@@ -1608,8 +1608,7 @@
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
-        },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        }
       }
     }
   }
