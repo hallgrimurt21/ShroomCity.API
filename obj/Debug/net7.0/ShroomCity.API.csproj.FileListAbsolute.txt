@@ -47,3 +47,6 @@ C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\bin\Debug\net7.0\Mono.
 C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\bin\Debug\net7.0\System.CodeDom.dll
 C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.Internal.dll
 C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\Halli\Desktop\ShroomCity\ShroomCity.API\obj\Debug\net7.0\ShroomCity.API.dll
+C:\Users\Halli\Desktop\ShroomCity\ShroomCity.API\obj\Debug\net7.0\refint\ShroomCity.API.dll
+C:\Users\Halli\Desktop\ShroomCity\ShroomCity.API\obj\Debug\net7.0\ShroomCity.API.pdb
