@@ -26,7 +26,6 @@ C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\obj\Debug\net7.0\Shroo
 C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\obj\Debug\net7.0\ShroomCity.API.csproj.CoreCompileInputs.cache
 C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\obj\Debug\net7.0\ShroomCity.API.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\obj\Debug\net7.0\ShroomCity.API.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\obj\Debug\net7.0\ShroomCity.API.sourcelink.json
 C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\obj\Debug\net7.0\staticwebassets.build.json
 C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\obj\Debug\net7.0\staticwebassets.development.json
 C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\obj\Debug\net7.0\staticwebassets\msbuild.ShroomCity.API.Microsoft.AspNetCore.StaticWebAssets.props
@@ -46,3 +45,5 @@ C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\bin\Debug\net7.0\Micro
 C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
 C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\bin\Debug\net7.0\Mono.TextTemplating.dll
 C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\bin\Debug\net7.0\System.CodeDom.dll
+C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\LILwh\OneDrive\Desktop\ShroomCity\ShroomCity.API\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ShroomCity.Repositories.Implementations;
@@ -11,9 +12,11 @@ using ShroomCity.Repositories.Implementations;
 namespace ShroomCity.API.Migrations
 {
     [DbContext(typeof(ShroomCityDbContext))]
-    partial class ShroomCityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231220015431_fixes")]
+    partial class fixes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
