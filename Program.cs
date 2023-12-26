@@ -3,7 +3,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using ShroomCity.Repositories.Implementations;
+using ShroomCity.Repositories.DbContext;
 using ShroomCity.Services.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
