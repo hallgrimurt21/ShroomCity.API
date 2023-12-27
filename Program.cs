@@ -1,11 +1,42 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using ShroomCity.Repositories.Implementations;
+using Microsoft.IdentityModel.Tokens;
+using ShroomCity.Repositories.DbContext;
+using ShroomCity.Services.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ShroomCityDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         x => x.MigrationsAssembly("ShroomCity.API")));
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = builder.Configuration["Jwt:SigningKey"] != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SigningKey"]!)) : null!
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async context =>
+            {
+                var tokenService = context.HttpContext.RequestServices.GetRequiredService<ITokenService>();
+                if (context.SecurityToken is JwtSecurityToken token && await tokenService.IsTokenBlacklisted(token.Id))
+                {
+                    context.Fail("This token is blacklisted.");
+                }
+            }
+        };
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -21,6 +52,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
