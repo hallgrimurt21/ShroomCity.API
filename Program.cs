@@ -15,7 +15,6 @@ builder.Services.AddDbContext<ShroomCityDbContext>(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-#pragma warning disable CS8604 // Possible null reference argument.
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -24,16 +23,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = builder.Configuration["Jwt:SigningKey"] != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SigningKey"])) : null!
+            IssuerSigningKey = builder.Configuration["Jwt:SigningKey"] != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SigningKey"]!)) : null!
         };
-#pragma warning restore CS8604 // Possible null reference argument.
-
         options.Events = new JwtBearerEvents
         {
             OnTokenValidated = async context =>
             {
                 var tokenService = context.HttpContext.RequestServices.GetRequiredService<ITokenService>();
-                if (context.SecurityToken is JwtSecurityToken token && await tokenService.IsTokenBlacklisted(token.RawData))
+                if (context.SecurityToken is JwtSecurityToken token && await tokenService.IsTokenBlacklisted(token.Id))
                 {
                     context.Fail("This token is blacklisted.");
                 }
