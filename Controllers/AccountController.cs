@@ -20,7 +20,14 @@ public class AccountController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterInputModel model)
     {
-        throw new NotImplementedException();
+        var user = await this.accountService.Register(model);
+        if (user == null)
+        {
+            return this.BadRequest("Registration failed");
+        }
+
+        var token = this.tokenService.GenerateJwtToken(user);
+        return this.Ok(token);
     }
 
     // POST api/account/login
