@@ -18,9 +18,9 @@ public class AccountController : ControllerBase
 
     // POST api/account/register
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterInputModel model)
+    public async Task<IActionResult> Register(RegisterInputModel inputModel)
     {
-        var user = await this.accountService.Register(model);
+        var user = await this.accountService.Register(inputModel);
         if (user == null)
         {
             return this.BadRequest("Registration failed");
@@ -32,9 +32,16 @@ public class AccountController : ControllerBase
 
     // POST api/account/login
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginInputModel model)
+    public async Task<IActionResult> Login(LoginInputModel inputModel)
     {
-        throw new NotImplementedException();
+        var user = await this.accountService.SignIn(inputModel);
+        if (user == null)
+        {
+            return this.BadRequest("Invalid credentials");
+        }
+
+        var token = this.tokenService.GenerateJwtToken(user);
+        return this.Ok(token);
     }
 
     // GET api/account/logout
