@@ -30,7 +30,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             OnTokenValidated = async context =>
             {
                 var tokenService = context.HttpContext.RequestServices.GetRequiredService<ITokenService>();
-                if (context.SecurityToken is JwtSecurityToken token && await tokenService.IsTokenBlacklisted(token.Id))
+                if (context.SecurityToken is JwtSecurityToken token && int.TryParse(token.Id, out var tokenId) && await tokenService.IsTokenBlacklisted(tokenId))
                 {
                     context.Fail("This token is blacklisted.");
                 }
