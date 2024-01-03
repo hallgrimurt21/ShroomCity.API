@@ -27,9 +27,16 @@ public class MushroomsController : ControllerBase
     // GET api/mushrooms/{id}
     [HttpGet("{id}")]
     [Authorize(Policy = "read:mushrooms")]
-    public Task<IActionResult> GetMushroom(int id)
+    public async Task<IActionResult> GetMushroom(int id)
     {
-        throw new NotImplementedException();
+        var mushroom = await this.mushroomService.GetMushroomById(id);
+
+        if (mushroom == null)
+        {
+            return this.NotFound("Mushroom not found.");
+        }
+
+        return this.Ok(mushroom);
     }
 
     // GET api/mushrooms/lookup
