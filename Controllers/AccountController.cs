@@ -44,8 +44,8 @@ public class AccountController : ControllerBase
         return this.Ok(token);
     }
 
-    // GET api/account/logout
-    [HttpGet("logout")]
+    // POST api/account/logout
+    [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
         throw new NotImplementedException();
