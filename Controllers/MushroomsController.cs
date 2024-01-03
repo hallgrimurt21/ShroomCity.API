@@ -78,7 +78,15 @@ public class MushroomsController : ControllerBase
     [Authorize(Policy = "write:mushrooms")]
     public async Task<IActionResult> UpdateMushroom(int id, bool performLookup, [FromBody] MushroomUpdateInputModel inputModel)
     {
-        throw new NotImplementedException();
+        var result = await this.mushroomService.UpdateMushroomById(id, inputModel, performLookup);
+        if (result)
+        {
+            return this.Ok("Mushroom updated");
+        }
+        else
+        {
+            return this.NotFound("Mushroom not found.");
+        }
     }
 
     // DELETE api/mushrooms/{id}
