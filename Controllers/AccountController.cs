@@ -64,13 +64,23 @@ public class AccountController : ControllerBase
             }
         }
 
-        return this.BadRequest("Invalid token");
+        return this.Unauthorized("Invalid authorization");
     }
 
     // GET api/account/profile
     [HttpGet("profile")]
-    public async Task<IActionResult> GetProfile()
+    [Authorize]
+    public IActionResult GetProfile()
     {
-        throw new NotImplementedException();
+        if (this.HttpContext.User.Identity is ClaimsIdentity identity)
+        {
+            var claims = identity.Claims
+                .Select(c => new { c.Type, c.Value })
+                .ToList();
+
+            return this.Ok(claims);
+        }
+
+        return this.Unauthorized("Invalid authorization");
     }
 }
