@@ -6,6 +6,7 @@ using ShroomCity.Models.Dtos;
 using ShroomCity.Models;
 using ShroomCity.Models.InputModels;
 using ShroomCity.Services.Interfaces;
+using System.Security.Claims;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -61,7 +62,15 @@ public class MushroomsController : ControllerBase
     [Authorize(Policy = "write:mushrooms")]
     public async Task<IActionResult> CreateMushroom([FromBody] MushroomInputModel inputModel)
     {
-        throw new NotImplementedException();
+        var researcherEmailAddress = this.User.FindFirst(ClaimTypes.Email)?.Value;
+        if (researcherEmailAddress == null)
+        {
+            return this.Unauthorized("User is not authenticated.");
+        }
+
+        var newMushroomId = await this.mushroomService.CreateMushroom(researcherEmailAddress, inputModel);
+
+        return this.CreatedAtAction(nameof(GetMushroom), new { id = newMushroomId }, inputModel);
     }
 
     // PUT api/mushrooms/{id}
