@@ -2,8 +2,6 @@ namespace ShroomCity.API.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShroomCity.Models.Dtos;
-using ShroomCity.Models;
 using ShroomCity.Models.InputModels;
 using ShroomCity.Services.Interfaces;
 using System.Security.Claims;
@@ -107,8 +105,21 @@ public class MushroomsController : ControllerBase
     // POST api/mushrooms/{id}/research-entries
     [HttpPost("{id}/research-entries")]
     [Authorize(Policy = "write:mushrooms")]
-    public async Task<IActionResult> CreateResearchEntry(int id, [FromBody] ResearchEntryInputModel model)
+    public async Task<IActionResult> CreateResearchEntry(int id, [FromBody] ResearchEntryInputModel inputModel)
     {
-        throw new NotImplementedException();
+        var researcherEmailAddress = this.User.FindFirst(ClaimTypes.Email)?.Value;
+        if (researcherEmailAddress == null)
+        {
+            return this.Unauthorized("User is not authenticated.");
+        }
+        var result = await this.mushroomService.CreateResearchEntry(id, researcherEmailAddress, inputModel);
+
+        if (!result)
+        {
+            return this.NotFound("Research entry not created.");
+        }
+
+        return this.StatusCode(201, result);
     }
+
 }
