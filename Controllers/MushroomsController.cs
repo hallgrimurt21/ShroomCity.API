@@ -94,7 +94,14 @@ public class MushroomsController : ControllerBase
     [Authorize(Policy = "write:mushrooms")]
     public async Task<IActionResult> DeleteMushroom(int id)
     {
-        throw new NotImplementedException();
+        var result = await this.mushroomService.DeleteMushroomById(id);
+
+        if (!result)
+        {
+            return this.NotFound("Mushroom not found.");
+        }
+
+        return this.Ok("Mushroom deleted.");
     }
 
     // POST api/mushrooms/{id}/research-entries
