@@ -2,6 +2,8 @@ namespace ShroomCity.API.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ShroomCity.Models.Dtos;
+using ShroomCity.Models;
 using ShroomCity.Models.InputModels;
 using ShroomCity.Services.Interfaces;
 
@@ -44,7 +46,14 @@ public class MushroomsController : ControllerBase
     [Authorize(Policy = "read:mushrooms")]
     public async Task<IActionResult> GetLookupMushrooms(int pageSize = 25, int pageNumber = 1)
     {
-        throw new NotImplementedException();
+        var mushrooms = await this.mushroomService.GetLookupMushrooms(pageSize, pageNumber);
+
+        if (mushrooms == null || !mushrooms.Items.Any())
+        {
+            return this.NotFound("No mushrooms found.");
+        }
+
+        return this.Ok(mushrooms);
     }
 
     // POST api/mushrooms
