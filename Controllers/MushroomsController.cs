@@ -3,18 +3,25 @@ namespace ShroomCity.API.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShroomCity.Models.InputModels;
+using ShroomCity.Services.Interfaces;
 
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
 public class MushroomsController : ControllerBase
 {
+    private readonly IMushroomService mushroomService;
+
+    public MushroomsController(IMushroomService mushroomService) =>
+        this.mushroomService = mushroomService;
     // GET api/mushrooms
     [HttpGet]
     [Authorize(Policy = "read:mushrooms")]
-    public Task<IActionResult> GetMushrooms(string? name, int? stemSizeMinimum, int? stemSizeMaximum, int? capSizeMinimum, int? capSizeMaximum, string? color, int pageSize = 25, int pageNumber = 1)
+    public async Task<IActionResult> GetMushrooms(string? name, int? stemSizeMinimum, int? stemSizeMaximum, int? capSizeMinimum, int? capSizeMaximum, string? color, int pageSize = 25, int pageNumber = 1)
     {
-        throw new NotImplementedException();
+        var envelope = await this.mushroomService.GetMushrooms(name, stemSizeMinimum, stemSizeMaximum, capSizeMinimum, capSizeMaximum, color, pageSize, pageNumber);
+
+        return this.Ok(envelope);
     }
 
     // GET api/mushrooms/{id}
