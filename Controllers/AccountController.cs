@@ -1,4 +1,8 @@
 namespace ShroomCity.API.Controllers;
+
+using System.Globalization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShroomCity.Models.InputModels;
 using ShroomCity.Services.Interfaces;
@@ -46,9 +50,21 @@ public class AccountController : ControllerBase
 
     // POST api/account/logout
     [HttpPost("logout")]
+    [Authorize]
     public async Task<IActionResult> Logout()
     {
-        throw new NotImplementedException();
+        if (this.HttpContext.User.Identity is ClaimsIdentity identity)
+        {
+            var tokenIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
+            if (tokenIdClaim != null)
+            {
+                var tokenId = int.Parse(tokenIdClaim.Value, CultureInfo.InvariantCulture);
+                await this.accountService.SignOut(tokenId);
+                return this.Ok();
+            }
+        }
+
+        return this.BadRequest("Invalid token");
     }
 
     // GET api/account/profile
