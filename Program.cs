@@ -5,17 +5,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ShroomCity.Repositories.DbContext;
+using ShroomCity.Services.Implementations;
 using ShroomCity.Services.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 
-builder.Services.AddDbContext<ShroomCityDbContext>(options =>
+services.AddDbContext<ShroomCityDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         x => x.MigrationsAssembly("ShroomCity.API")));
 
-builder.Services.AddControllers();
+services.AddControllers();
 
-builder.Services.AddAuthorization(options =>
+services.AddAuthorization(options =>
 {
     options.AddPolicy("read:mushrooms", policy => policy.RequireClaim("Permission", "read:mushrooms"));
     options.AddPolicy("write:mushrooms", policy => policy.RequireClaim("Permission", "write:mushrooms"));
@@ -23,7 +25,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("write:researchers", policy => policy.RequireClaim("Permission", "write:researchers"));
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -50,8 +52,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen(c
     => c.SwaggerDoc("v1", new OpenApiInfo { Title = "ShroomCity API", Version = "v1" }));
 
 var app = builder.Build();
