@@ -12,6 +12,14 @@ builder.Services.AddDbContext<ShroomCityDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         x => x.MigrationsAssembly("ShroomCity.API")));
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("read:mushrooms", policy => policy.RequireClaim("Permission", "read:mushrooms"));
+    options.AddPolicy("write:mushrooms", policy => policy.RequireClaim("Permission", "write:mushrooms"));
+    options.AddPolicy("read:researchers", policy => policy.RequireClaim("Permission", "read:researchers"));
+    options.AddPolicy("write:researchers", policy => policy.RequireClaim("Permission", "write:researchers"));
+});
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
