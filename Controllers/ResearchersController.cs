@@ -29,7 +29,25 @@ public class ResearchersController : ControllerBase
     [Authorize(Policy = "write:researchers")]
     public async Task<IActionResult> CreateResearcher([FromBody] ResearcherInputModel researcherInputModel)
     {
-        throw new NotImplementedException();
+        if (researcherInputModel == null)
+        {
+            return this.BadRequest("Researcher input data is null");
+        }
+
+        var createdBy = this.User.Identity?.Name;
+        if (createdBy == null)
+        {
+            return this.Unauthorized("User identity does not exist");
+        }
+
+        var researcherId = await this.researcherService.CreateResearcher(createdBy, researcherInputModel);
+
+        if (researcherId == null)
+        {
+            return this.BadRequest("Researcher could not be created");
+        }
+
+        return this.CreatedAtAction(nameof(GetResearcher), new { id = researcherId }, researcherInputModel);
     }
 
     // GET /api/researchers/{id}
