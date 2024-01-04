@@ -20,7 +20,8 @@ public class ResearchersController : ControllerBase
     [Authorize(Policy = "read:researchers")]
     public async Task<IActionResult> GetResearchers()
     {
-        throw new NotImplementedException();
+        var researchers = await this.researcherService.GetAllResearchers();
+        return this.Ok(researchers);
     }
 
     // POST /api/researchers
