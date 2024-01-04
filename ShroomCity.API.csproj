@@ -19,8 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ShroomCity.Repositories\ShroomCity.Repositories.csproj" />
     <ProjectReference Include="..\ShroomCity.Services\ShroomCity.Services.csproj" />
+    <ProjectReference Include="..\ShroomCity.Models\ShroomCity.Models.csproj" />
+    <ProjectReference Include="..\ShroomCity.Utilities\ShroomCity.Utilities.csproj" />
   </ItemGroup>
 
 </Project>
