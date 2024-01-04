@@ -55,7 +55,12 @@ public class ResearchersController : ControllerBase
     [Authorize(Policy = "read:researchers")]
     public async Task<IActionResult> GetResearcher(int id)
     {
-        throw new NotImplementedException();
+        var researcher = await this.researcherService.GetResearcherById(id);
+        if (researcher == null)
+        {
+            return this.NotFound("Researcher not found");
+        }
+        return this.Ok(researcher);
     }
 
     // GET /api/researchers/self
