@@ -12,6 +12,8 @@ builder.Services.AddDbContext<ShroomCityDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         x => x.MigrationsAssembly("ShroomCity.API")));
 
+builder.Services.AddControllers();
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("read:mushrooms", policy => policy.RequireClaim("Permission", "read:mushrooms"));
