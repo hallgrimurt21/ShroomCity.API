@@ -3,12 +3,18 @@ namespace ShroomCity.API.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShroomCity.Models.InputModels;
+using ShroomCity.Services.Interfaces;
 
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
 public class ResearchersController : ControllerBase
 {
+    private readonly IResearcherService researcherService;
+
+    public ResearchersController(IResearcherService researcherService) =>
+        this.researcherService = researcherService;
+
     // GET /api/researchers
     [HttpGet]
     [Authorize(Policy = "read:researchers")]
