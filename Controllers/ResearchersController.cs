@@ -1,5 +1,6 @@
 namespace ShroomCity.API.Controllers;
 
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShroomCity.Models.InputModels;
@@ -34,7 +35,7 @@ public class ResearchersController : ControllerBase
             return this.BadRequest("Researcher input data is null");
         }
 
-        var createdBy = this.User.Identity?.Name;
+        var createdBy = this.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
         if (createdBy == null)
         {
             return this.Unauthorized("User identity does not exist");
@@ -68,6 +69,18 @@ public class ResearchersController : ControllerBase
     [Authorize(Policy = "write:mushrooms")]
     public async Task<IActionResult> GetSelfResearcher()
     {
-        throw new NotImplementedException();
+        var emailAddress = this.User.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        if (emailAddress == null)
+        {
+            return this.Unauthorized("User identity does not exist");
+        }
+
+        var researcher = await this.researcherService.GetResearcherByEmailAddress(emailAddress);
+        if (researcher == null)
+        {
+            return this.NotFound("Researcher not found");
+        }
+
+        return this.Ok(researcher);
     }
 }
