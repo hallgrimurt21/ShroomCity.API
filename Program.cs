@@ -56,6 +56,12 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen(c
     => c.SwaggerDoc("v1", new OpenApiInfo { Title = "ShroomCity API", Version = "v1" }));
 
+services.AddScoped<IAccountService, AccountService>();
+services.AddScoped<ITokenService, TokenService>();
+services.AddScoped<IMushroomService, MushroomService>();
+services.AddScoped<IResearcherService, ResearcherService>();
+services.AddScoped<IExternalMushroomService, ExternalMushroomService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
