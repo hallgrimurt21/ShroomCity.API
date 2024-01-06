@@ -5,10 +5,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ShroomCity.Repositories.DbContext;
+using ShroomCity.Repositories.Implementations;
+using ShroomCity.Repositories.Interfaces;
 using ShroomCity.Services.Implementations;
 using ShroomCity.Services.Interfaces;
+using ShroomCity.Utilities.Exceptions;
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
+var configuration = builder.Configuration;
+
+var jwtConfig = configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>() ?? throw new JwtConfigMissingException();
+
+services.AddSingleton(jwtConfig);
 
 services.AddDbContext<ShroomCityDbContext>(options =>
     options.UseNpgsql(
@@ -56,11 +64,15 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen(c
     => c.SwaggerDoc("v1", new OpenApiInfo { Title = "ShroomCity API", Version = "v1" }));
 
+services.AddScoped<IAccountRepository, AccountRepository>();
+services.AddScoped<ITokenRepository, TokenRepository>();
+services.AddScoped<IMushroomRepository, MushroomRepository>();
+services.AddScoped<IResearcherRepository, ResearcherRepository>();
 services.AddScoped<IAccountService, AccountService>();
 services.AddScoped<ITokenService, TokenService>();
 services.AddScoped<IMushroomService, MushroomService>();
 services.AddScoped<IResearcherService, ResearcherService>();
-services.AddScoped<IExternalMushroomService, ExternalMushroomService>();
+services.AddHttpClient<IExternalMushroomService, ExternalMushroomService>();
 
 var app = builder.Build();
 
