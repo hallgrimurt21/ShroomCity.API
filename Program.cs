@@ -28,10 +28,10 @@ services.AddControllers();
 
 services.AddAuthorization(options =>
 {
-    options.AddPolicy("read:mushrooms", policy => policy.RequireClaim("Permission", "read:mushrooms"));
-    options.AddPolicy("write:mushrooms", policy => policy.RequireClaim("Permission", "write:mushrooms"));
-    options.AddPolicy("read:researchers", policy => policy.RequireClaim("Permission", "read:researchers"));
-    options.AddPolicy("write:researchers", policy => policy.RequireClaim("Permission", "write:researchers"));
+    options.AddPolicy("read:mushrooms", policy => policy.RequireClaim("permissions", "read:mushrooms"));
+    options.AddPolicy("write:mushrooms", policy => policy.RequireClaim("permissions", "write:mushrooms"));
+    options.AddPolicy("read:researchers", policy => policy.RequireClaim("permissions", "read:researchers"));
+    options.AddPolicy("write:researchers", policy => policy.RequireClaim("permissions", "write:researchers"));
 });
 
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -45,7 +45,7 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["JwtConfiguration:Issuer"],
             ValidAudience = builder.Configuration["JwtConfiguration:Audience"],
-            IssuerSigningKey = builder.Configuration["JwtConfiguration:Secret"] != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfiguration:Secret"])) : null
+            IssuerSigningKey = builder.Configuration["JwtConfiguration:Secret"] != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfiguration:Secret"]!)) : null
         };
         options.Events = new JwtBearerEvents
         {
