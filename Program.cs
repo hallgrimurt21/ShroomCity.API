@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ShroomCity.Models.Constants;
 using ShroomCity.Repositories.DbContext;
 using ShroomCity.Repositories.Implementations;
 using ShroomCity.Repositories.Interfaces;
@@ -42,20 +43,24 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = builder.Configuration["Jwt:SigningKey"] != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SigningKey"]!)) : null!
+            ValidIssuer = builder.Configuration["JwtConfiguration:Issuer"],
+            ValidAudience = builder.Configuration["JwtConfiguration:Audience"],
+            IssuerSigningKey = builder.Configuration["JwtConfiguration:Secret"] != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfiguration:Secret"])) : null
         };
         options.Events = new JwtBearerEvents
         {
             OnTokenValidated = async context =>
-            {
-                var tokenService = context.HttpContext.RequestServices.GetRequiredService<ITokenService>();
-                if (context.SecurityToken is JwtSecurityToken token && int.TryParse(token.Id, out var tokenId) && await tokenService.IsTokenBlacklisted(tokenId))
-                {
-                    context.Fail("This token is blacklisted.");
-                }
-            }
+     {
+         var tokenService = context.HttpContext.RequestServices.GetRequiredService<ITokenService>();
+         if (context.SecurityToken is JwtSecurityToken token)
+         {
+             var tokenIdClaim = token.Claims.FirstOrDefault(c => c.Type == ClaimTypeConstants.TokenIdClaimType);
+             if (tokenIdClaim != null && int.TryParse(tokenIdClaim.Value, out var tokenId) && await tokenService.IsTokenBlacklisted(tokenId))
+             {
+                 context.Fail("This token is blacklisted.");
+             }
+         }
+     }
         };
     });
 
