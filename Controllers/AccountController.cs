@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ShroomCity.Models.Constants;
 using ShroomCity.Models.InputModels;
 using ShroomCity.Services.Interfaces;
 
@@ -55,7 +56,7 @@ public class AccountController : ControllerBase
     {
         if (this.HttpContext.User.Identity is ClaimsIdentity identity)
         {
-            var tokenIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
+            var tokenIdClaim = identity.FindFirst(ClaimTypeConstants.TokenIdClaimType);
             if (tokenIdClaim != null)
             {
                 var tokenId = int.Parse(tokenIdClaim.Value, CultureInfo.InvariantCulture);
