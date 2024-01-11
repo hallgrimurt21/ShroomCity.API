@@ -119,7 +119,7 @@ public class MushroomsController : ControllerBase
             return this.NotFound("Research entry not created.");
         }
 
-        return this.StatusCode(201, result);
+        return this.StatusCode(201);
     }
 
 }
