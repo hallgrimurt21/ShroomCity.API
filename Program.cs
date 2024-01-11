@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ShroomCity.API.Extensions;
 using ShroomCity.Models.Constants;
 using ShroomCity.Repositories.DbContext;
 using ShroomCity.Repositories.Implementations;
@@ -34,35 +35,7 @@ services.AddAuthorization(options =>
     options.AddPolicy("write:researchers", policy => policy.RequireClaim("permissions", "write:researchers"));
 });
 
-services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["JwtConfiguration:Issuer"],
-            ValidAudience = builder.Configuration["JwtConfiguration:Audience"],
-            IssuerSigningKey = builder.Configuration["JwtConfiguration:Secret"] != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfiguration:Secret"]!)) : null
-        };
-        options.Events = new JwtBearerEvents
-        {
-            OnTokenValidated = async context =>
-     {
-         var tokenService = context.HttpContext.RequestServices.GetRequiredService<ITokenService>();
-         if (context.SecurityToken is JwtSecurityToken token)
-         {
-             var tokenIdClaim = token.Claims.FirstOrDefault(c => c.Type == ClaimTypeConstants.TokenIdClaimType);
-             if (tokenIdClaim != null && int.TryParse(tokenIdClaim.Value, out var tokenId) && await tokenService.IsTokenBlacklisted(tokenId))
-             {
-                 context.Fail("This token is blacklisted.");
-             }
-         }
-     }
-        };
-    });
+services.AddJwtAuthentication(configuration);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
