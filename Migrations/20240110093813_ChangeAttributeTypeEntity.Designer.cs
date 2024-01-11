@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ShroomCity.Repositories.DbContext;
@@ -11,9 +12,11 @@ using ShroomCity.Repositories.DbContext;
 namespace ShroomCity.API.Migrations
 {
     [DbContext(typeof(ShroomCityDbContext))]
-    partial class ShroomCityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240110093813_ChangeAttributeTypeEntity")]
+    partial class ChangeAttributeTypeEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
