@@ -1,11 +1,13 @@
 namespace ShroomCity.API.Extensions;
 
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+
 using ShroomCity.Models.Constants;
 using ShroomCity.Repositories.DbContext;
 using ShroomCity.Repositories.Implementations;
@@ -28,7 +30,7 @@ public static class ServiceCollectionExtensions
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = configuration["JwtConfiguration:Issuer"],
                     ValidAudience = configuration["JwtConfiguration:Audience"],
-                    IssuerSigningKey = configuration["JwtConfiguration:Secret"] != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtConfiguration:Secret"])) : null
+                    IssuerSigningKey = configuration["JwtConfiguration:Secret"] != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtConfiguration:Secret"]!)) : null
                 };
                 options.Events = new JwtBearerEvents
                 {
