@@ -3,9 +3,11 @@ namespace ShroomCity.API.Extensions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ShroomCity.Models.Constants;
+using ShroomCity.Repositories.DbContext;
 using ShroomCity.Repositories.Implementations;
 using ShroomCity.Repositories.Interfaces;
 using ShroomCity.Services.Implementations;
@@ -97,6 +99,27 @@ public static class ServiceCollectionExtensions
                 }
             });
         });
+
+        return services;
+    }
+    public static IServiceCollection AddAuthorizationPolicies(this IServiceCollection services)
+    {
+        _ = services.AddAuthorization(options =>
+        {
+            options.AddPolicy("read:mushrooms", policy => policy.RequireClaim("permissions", "read:mushrooms"));
+            options.AddPolicy("write:mushrooms", policy => policy.RequireClaim("permissions", "write:mushrooms"));
+            options.AddPolicy("read:researchers", policy => policy.RequireClaim("permissions", "read:researchers"));
+            options.AddPolicy("write:researchers", policy => policy.RequireClaim("permissions", "write:researchers"));
+        });
+
+        return services;
+    }
+    public static IServiceCollection AddShroomCityDbContext(this IServiceCollection services, IConfiguration configuration)
+    {
+        _ = services.AddDbContext<ShroomCityDbContext>(options =>
+            options.UseNpgsql(
+                configuration.GetConnectionString("DefaultConnection"),
+                x => x.MigrationsAssembly("ShroomCity.API")));
 
         return services;
     }
