@@ -4,14 +4,18 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using ShroomCity.Models.Constants;
+using ShroomCity.Repositories.Implementations;
+using ShroomCity.Repositories.Interfaces;
+using ShroomCity.Services.Implementations;
 using ShroomCity.Services.Interfaces;
 
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        _ = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -40,6 +44,59 @@ public static class ServiceCollectionExtensions
                     }
                 };
             });
+
+        return services;
+    }
+    public static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<ITokenRepository, TokenRepository>();
+        services.AddScoped<IMushroomRepository, MushroomRepository>();
+        services.AddScoped<IResearcherRepository, ResearcherRepository>();
+
+        return services;
+    }
+    public static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        _ = services.AddScoped<IAccountService, AccountService>();
+        _ = services.AddScoped<ITokenService, TokenService>();
+        _ = services.AddScoped<IMushroomService, MushroomService>();
+        _ = services.AddScoped<IResearcherService, ResearcherService>();
+        _ = services.AddScoped<IExternalMushroomService, ExternalMushroomService>();
+
+        return services;
+    }
+    public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
+    {
+        _ = services.AddEndpointsApiExplorer();
+        _ = services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "ShroomCity API", Version = "v1" });
+
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer"
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
 
         return services;
     }
