@@ -1,11 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using ShroomCity.API.Extensions;
 using ShroomCity.Repositories.DbContext;
-using ShroomCity.Repositories.Implementations;
-using ShroomCity.Repositories.Interfaces;
 using ShroomCity.Services.Implementations;
-using ShroomCity.Services.Interfaces;
 using ShroomCity.Utilities.Exceptions;
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
