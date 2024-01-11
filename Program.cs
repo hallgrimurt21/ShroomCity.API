@@ -1,11 +1,6 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ShroomCity.API.Extensions;
-using ShroomCity.Models.Constants;
 using ShroomCity.Repositories.DbContext;
 using ShroomCity.Repositories.Implementations;
 using ShroomCity.Repositories.Interfaces;
@@ -79,21 +74,8 @@ services.AddScoped<IResearcherService, ResearcherService>();
 services.AddHttpClient<IExternalMushroomService, ExternalMushroomService>();
 
 var app = builder.Build();
+var env = app.Environment;
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShroomCity API v1"));
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthentication();
-
-app.UseAuthorization();
-
-app.MapControllers();
+app.ConfigureApiMiddleware(env);
 
 app.Run();
