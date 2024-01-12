@@ -28,7 +28,7 @@ public class AccountController : ControllerBase
         var user = await this.accountService.Register(inputModel);
         if (user == null)
         {
-            return this.BadRequest("Registration failed");
+            return this.Unauthorized("Registration failed");
         }
 
         var token = this.tokenService.GenerateJwtToken(user);
