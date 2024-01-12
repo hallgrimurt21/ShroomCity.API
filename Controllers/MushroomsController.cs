@@ -146,6 +146,10 @@ public class MushroomsController : ControllerBase
         {
             return this.NotFound(ex.Message);
         }
+        catch (InvalidInputException ex)
+        {
+            return this.UnprocessableEntity(ex.Message);
+        }
 
     }
 }
