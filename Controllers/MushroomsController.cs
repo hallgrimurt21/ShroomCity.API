@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShroomCity.Models.InputModels;
 using ShroomCity.Services.Interfaces;
+using ShroomCity.Utilities.Exceptions;
 using System.Security.Claims;
 
 [ApiController]
@@ -21,6 +22,11 @@ public class MushroomsController : ControllerBase
     public async Task<IActionResult> GetMushrooms(string? name, int? stemSizeMinimum, int? stemSizeMaximum, int? capSizeMinimum, int? capSizeMaximum, string? color, int pageSize = 25, int pageNumber = 1)
     {
         var envelope = await this.mushroomService.GetMushrooms(name, stemSizeMinimum, stemSizeMaximum, capSizeMinimum, capSizeMaximum, color, pageSize, pageNumber);
+
+        if (envelope == null)
+        {
+            return this.BadRequest("Something went wrong.");
+        }
 
         return this.Ok(envelope);
     }
@@ -65,10 +71,15 @@ public class MushroomsController : ControllerBase
         {
             return this.Unauthorized("User is not authenticated.");
         }
-
-        var newMushroomId = await this.mushroomService.CreateMushroom(researcherEmailAddress, inputModel);
-
-        return this.CreatedAtAction(nameof(GetMushroom), new { id = newMushroomId }, inputModel);
+        try
+        {
+            var newMushroomId = await this.mushroomService.CreateMushroom(researcherEmailAddress, inputModel);
+            return this.CreatedAtAction(nameof(GetMushroom), new { id = newMushroomId }, inputModel);
+        }
+        catch (Exception e)
+        {
+            return this.NotFound("Mushroom does not exist.");
+        }
     }
 
     // PUT api/mushrooms/{id}
@@ -112,14 +123,29 @@ public class MushroomsController : ControllerBase
         {
             return this.Unauthorized("User is not authenticated.");
         }
-        var result = await this.mushroomService.CreateResearchEntry(id, researcherEmailAddress, inputModel);
-
-        if (!result)
+        try
         {
-            return this.NotFound("Research entry not created.");
+            var result = await this.mushroomService.CreateResearchEntry(id, researcherEmailAddress, inputModel);
+
+            if (!result)
+            {
+                return this.NotFound("Research entry not created.");
+            }
+
+            return this.StatusCode(201);
+        }
+        catch (MushroomNotFoundException ex)
+        {
+            return this.NotFound(ex.Message);
+        }
+        catch (ResearcherNotFoundException ex)
+        {
+            return this.NotFound(ex.Message);
+        }
+        catch (AttributeTypeNotFoundException ex)
+        {
+            return this.NotFound(ex.Message);
         }
 
-        return this.StatusCode(201);
     }
-
 }
