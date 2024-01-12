@@ -69,7 +69,7 @@ public class MushroomsController : ControllerBase
         var researcherEmailAddress = this.User.FindFirst(ClaimTypes.Email)?.Value;
         if (researcherEmailAddress == null)
         {
-            return this.Unauthorized("User is not authenticated.");
+            return this.BadRequest("User is not authenticated.");
         }
         try
         {

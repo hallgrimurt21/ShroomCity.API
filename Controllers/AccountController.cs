@@ -42,7 +42,7 @@ public class AccountController : ControllerBase
         var user = await this.accountService.SignIn(inputModel);
         if (user == null)
         {
-            return this.BadRequest("Invalid credentials");
+            return this.Unauthorized("Invalid credentials");
         }
 
         var token = this.tokenService.GenerateJwtToken(user);
