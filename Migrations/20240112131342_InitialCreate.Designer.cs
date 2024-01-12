@@ -12,7 +12,7 @@ using ShroomCity.Repositories.DbContext;
 namespace ShroomCity.API.Migrations
 {
     [DbContext(typeof(ShroomCityDbContext))]
-    [Migration("20240102174452_InitialCreate")]
+    [Migration("20240112131342_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -122,8 +122,7 @@ namespace ShroomCity.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AttributeTypeId")
-                        .IsUnique();
+                    b.HasIndex("AttributeTypeId");
 
                     b.HasIndex("RegisteredById");
 
@@ -265,6 +264,7 @@ namespace ShroomCity.API.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -358,8 +358,8 @@ namespace ShroomCity.API.Migrations
             modelBuilder.Entity("ShroomCity.Models.Entities.Attribute", b =>
                 {
                     b.HasOne("ShroomCity.Models.Entities.AttributeType", "AttributeType")
-                        .WithOne("Attribute")
-                        .HasForeignKey("ShroomCity.Models.Entities.Attribute", "AttributeTypeId")
+                        .WithMany("Attributes")
+                        .HasForeignKey("AttributeTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -387,7 +387,7 @@ namespace ShroomCity.API.Migrations
 
             modelBuilder.Entity("ShroomCity.Models.Entities.AttributeType", b =>
                 {
-                    b.Navigation("Attribute");
+                    b.Navigation("Attributes");
                 });
 
             modelBuilder.Entity("ShroomCity.Models.Entities.Role", b =>

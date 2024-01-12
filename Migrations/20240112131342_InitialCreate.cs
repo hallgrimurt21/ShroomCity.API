@@ -74,7 +74,7 @@ namespace ShroomCity.API.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true)
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -237,8 +237,7 @@ namespace ShroomCity.API.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Attributes_AttributeTypeId",
                 table: "Attributes",
-                column: "AttributeTypeId",
-                unique: true);
+                column: "AttributeTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attributes_RegisteredById",
