@@ -74,7 +74,7 @@ public class MushroomsController : ControllerBase
     // PUT api/mushrooms/{id}
     [HttpPut("{id}")]
     [Authorize(Policy = "write:mushrooms")]
-    public async Task<IActionResult> UpdateMushroom(int id, bool performLookup, [FromBody] MushroomUpdateInputModel inputModel)
+    public async Task<IActionResult> UpdateMushroom(int id, [FromBody] MushroomUpdateInputModel inputModel, bool performLookup = false)
     {
         var result = await this.mushroomService.UpdateMushroomById(id, inputModel, performLookup);
         if (result)
